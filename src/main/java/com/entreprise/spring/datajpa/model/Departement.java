@@ -1,10 +1,8 @@
 package com.entreprise.spring.datajpa.model;
 
-
 import javax.persistence.*;
-//import org.hibernate.annotations.OnDelete;
-//import org.hibernate.annotations.OnDeleteAction;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "departement")
@@ -12,24 +10,35 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Departement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departement_generator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name="Nom")
     private String nom;
     @Column(name="Description")
     private String description;
-    @Column(name="Chef du Departement")
+    @Column(name="Chef_du_Departement")
     private String chefDepartement;
     @Column(name="Localisation")
     private String localisation;
     @Column(name="Budget")
     private Integer budget;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "departement_projet",
+            joinColumns = { @JoinColumn(name = "departement_id") },
+            inverseJoinColumns = { @JoinColumn(name = "projet_id") })
+    private Set<Projet> projets = new HashSet<>();
+
+
+
     public Departement() {
     }
 
-    public Departement(Long id, String nom, String description, String chefDepartement, String localisation, Integer budget) {
-        this.id = id;
+    public Departement(String nom, String description, String chefDepartement, String localisation, Integer budget) {
         this.nom = nom;
         this.description = description;
         this.chefDepartement = chefDepartement;
@@ -83,5 +92,26 @@ public class Departement {
 
     public void setBudget(Integer budget) {
         this.budget = budget;
+    }
+
+    public Set<Projet> getProjet() {
+        return projets;
+    }
+
+    public void setProjet(Set<Projet> projet) {
+        this.projets = projet;
+    }
+
+    public void addProjet(Projet projet) {
+        this.projets.add(projet);
+        projet.getDepartements().add(this);
+    }
+
+    public void removeProjet(long projetId) {
+        Projet projet = this.projets.stream().filter(t -> t.getId() == projetId).findFirst().orElse(null);
+        if (projet != null) {
+            this.projets.remove(projet);
+            projet.getDepartements().remove(this);
+        }
     }
 }

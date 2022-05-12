@@ -1,29 +1,20 @@
 package com.entreprise.spring.datajpa.api;
 
 
-import java.util.List;
-
-import com.entreprise.spring.datajpa.model.Departement;
+import com.entreprise.spring.datajpa.exception.RessourceNotFoundException;
+import com.entreprise.spring.datajpa.model.Employee;
+import com.entreprise.spring.datajpa.repository.DepartementRepository;
+import com.entreprise.spring.datajpa.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.entreprise.spring.datajpa.exception.RessourceNotFoundException;
-import com.entreprise.spring.datajpa.model.Employee;
-import com.entreprise.spring.datajpa.repository.EmployeeRepository;
-import com.entreprise.spring.datajpa.repository.DepartementRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/employee")
 
 public class EmployeeController {
     @Autowired
@@ -36,7 +27,7 @@ public class EmployeeController {
         if (!departementRepository.existsById(departementId)) {
             throw new RessourceNotFoundException("Not found Departement with id = " + departementId);
         }
-        List<Employee> employees = employeeRepository.findByDepId(departementId);
+        List<Employee> employees = employeeRepository.findByDepartementId(departementId);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
     @GetMapping("/employee/{id}")

@@ -16,11 +16,11 @@ public class Projet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+   // @Column(name = "id", nullable = false)
     private Long id;
     @Column(name="Intitule")
     private String intitule;
-    @Column(name="Code")
+    @Column(name="Code" , unique=true)
     private String code;
     @Column(name="Sujet")
     private String sujet;
@@ -28,12 +28,15 @@ public class Projet {
     private Integer budget;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    },
-            mappedBy = "projet")
-    @JoinColumn(name = "departement_id", nullable = false)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade =   {
+                            CascadeType.PERSIST,
+                            CascadeType.MERGE
+                        },
+            mappedBy = "projets"
+    )
+    //@JoinColumn(name = "departement_id", nullable = false)
 
     @JsonIgnore
     private Set<Departement> departement=new HashSet<>();
@@ -42,12 +45,14 @@ public class Projet {
             CascadeType.PERSIST,
             CascadeType.MERGE
     },
-            mappedBy = "projet")
+            mappedBy = "projets")
 
-    @JoinColumn(name = "employee_id", nullable = false)
-
+    //@JoinColumn(name = "employee_id", nullable = false)
     @JsonIgnore
     private Set<Employee> employee=new HashSet<>();
+
+    public Projet() {
+    }
 
     public Projet(Long id, String intitule, String code, String sujet, Integer budget) {
         this.id = id;
@@ -97,11 +102,19 @@ public class Projet {
         this.budget = budget;
     }
 
-    public void setDepartement(Set<Departement> departement) {
+    public void setDepartements(Set<Departement> departement) {
         this.departement = departement;
     }
 
-    public void setEmployee(Set<Employee> employee) {
+    public void setEmployees(Set<Employee> employee) {
         this.employee = employee;
+    }
+
+    public Set<Departement> getDepartements() {
+        return departement;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employee;
     }
 }

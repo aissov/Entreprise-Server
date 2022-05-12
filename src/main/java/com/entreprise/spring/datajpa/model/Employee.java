@@ -1,24 +1,24 @@
 package com.entreprise.spring.datajpa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-//import org.hibernate.annotations.OnDelete;
-//import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "employee")
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_generator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "employee_generator", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name="Nom")
     private String nom;
-    @Column(name="prenom")
+    @Column(name="Prenom")
     private String prenom;
     @Column(name="Matricule")
     private Integer matricule;
@@ -39,7 +39,19 @@ public class Employee {
     @JsonIgnore
     private Departement departement;
 
-    public Employee(Long id, String nom, String prenom, Integer matricule, Date dateNaissance, Date dateEmbauche, String fonction, Integer salaire) {
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "employee_projet",
+            joinColumns = { @JoinColumn(name = "employee_id") },
+            inverseJoinColumns = { @JoinColumn(name = "projet_id") })
+    private Set<Projet> projets = new HashSet<>();
+
+
+
+    public Employee(String nom, String prenom, Integer matricule, Date dateNaissance, Date dateEmbauche, String fonction, Integer salaire) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -133,6 +145,28 @@ public class Employee {
 
     public void setSalaire(Integer salaire) {
         this.salaire = salaire;
+    }
+
+
+    public Set<Projet> getProjet() {
+        return projets;
+    }
+
+    public void setProjet(Set<Projet> projet) {
+        this.projets = projet;
+    }
+
+    public void addProjet(Projet projet) {
+        this.projets.add(projet);
+        projet.getEmployees().add(this);
+    }
+
+    public void removeProjet(long projetId) {
+        Projet projet = this.projets.stream().filter(t -> t.getId() == projetId).findFirst().orElse(null);
+        if (projet != null) {
+            this.projets.remove(projet);
+            projet.getEmployees().remove(this);
+        }
     }
 
 }

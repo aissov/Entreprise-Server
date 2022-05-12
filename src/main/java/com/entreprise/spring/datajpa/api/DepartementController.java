@@ -1,40 +1,47 @@
 package com.entreprise.spring.datajpa.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.entreprise.spring.datajpa.exception.RessourceNotFoundException;
 import com.entreprise.spring.datajpa.model.Departement;
 import com.entreprise.spring.datajpa.repository.DepartementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/departement")
 public class DepartementController {
     @Autowired
     DepartementRepository departementRepository;
+
+    /*
+    @Autowired
+    public void setRepository(DepartementRepository departementRepository) {
+        this.departementRepository = departementRepository;
+    }
+
+
+    @Override
+    public void setIdentifier(Long id, Departement departement) {
+        departement.setId(id);
+    }*/
+
+
+
     @GetMapping("/departement")
     public ResponseEntity<List<Departement>> getAllDepartements(@RequestParam(required = false) String nom) {
         List<Departement> departement = new ArrayList<Departement>();
         if (nom == null)
             departement.addAll(departementRepository.findAll());
         else
-            departement.addAll(departementRepository.findByDepartementName(nom));
+            departement.addAll(departementRepository.findByNom(nom));
         if (departement.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -47,7 +54,7 @@ public class DepartementController {
     }
     @PostMapping("/departement")
     public ResponseEntity<Departement> createDepartement(@RequestBody Departement departement) {
-        Departement Dep= new Departement(departement.getId(),departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
+        Departement Dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
         Departement _departement = departementRepository.save(Dep);
         return new ResponseEntity<>(_departement, HttpStatus.CREATED);
     }
@@ -59,10 +66,8 @@ public class DepartementController {
         _departement.setChefDepartement(departement.getChefDepartement());
         _departement.setLocalisation(departement.getLocalisation());
         _departement.setBudget(departement.getBudget());
-        ResponseEntity<Departement> departementResponseEntity;
-        departementResponseEntity = new ResponseEntity<>(departementRepository.save(_departement), HttpStatus.OK);
+        return new ResponseEntity<>(departementRepository.save(_departement), HttpStatus.OK);
 
-        return departementResponseEntity;
     }
     @DeleteMapping("/departement/{id}")
     public ResponseEntity<HttpStatus> deleteDepartement(@PathVariable("id") long id) {
