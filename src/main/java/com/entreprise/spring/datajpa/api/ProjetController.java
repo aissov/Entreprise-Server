@@ -28,7 +28,7 @@ public class ProjetController {
             return "API OK";
         }
 
-        @GetMapping("/projet")
+        @GetMapping("/getAll")
         public ResponseEntity<List<Projet>> getAllProjets(@RequestParam(required = false) String nom) {
                 List<Projet> projet = new ArrayList<Projet>();
                 if (nom == null)
@@ -41,20 +41,20 @@ public class ProjetController {
                 return new ResponseEntity<>(projet, HttpStatus.OK);
                 }
 
-        @GetMapping("/departement/{id}")
+        @GetMapping("/get/{id}")
         public ResponseEntity<Projet> getProjetyId(@PathVariable("id") long id) {
             Projet projet = projetRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Not found Tutorial with id = " + id));
                 return new ResponseEntity<>(projet, HttpStatus.OK);
                 }
 
-        @PostMapping("/departement")
+        @PostMapping("/create")
         public ResponseEntity<Projet> createProjet(@RequestBody Projet projet) {
             Projet Dep= new Projet(projet.getId(),projet.getIntitule(),projet.getCode(),projet.getSujet(),projet.getBudget());
             Projet _projet = projetRepository.save(Dep);
                 return new ResponseEntity<>(_projet, HttpStatus.CREATED);
                 }
 
-        @PutMapping("/departement/{id}")
+        @PutMapping("/update/{id}")
         public ResponseEntity<Projet> updateProjet(@PathVariable("id") long id, @RequestBody Projet projet) {
             Projet _projet = projetRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Not found Tutorial with id = " + id));
             _projet.setIntitule(projet.getIntitule());
@@ -65,13 +65,13 @@ public class ProjetController {
 
         }
 
-        @DeleteMapping("/departement/{id}")
+        @DeleteMapping("/delete/{id}")
         public ResponseEntity<HttpStatus> deleteProjett(@PathVariable("id") long id) {
             projetRepository.deleteById(id);
 
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
-        @DeleteMapping("/departement")
+        @DeleteMapping("/deleteAll")
         public ResponseEntity<HttpStatus> deleteAllProjets() {
             projetRepository.deleteAll();
 

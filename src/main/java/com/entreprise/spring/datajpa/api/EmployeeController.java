@@ -17,12 +17,14 @@ import java.util.List;
 @RequestMapping("/api/employee")
 
 public class EmployeeController {
+
     @Autowired
     private DepartementRepository departementRepository;
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @GetMapping("/departement/{departementId}/employee")
+    @GetMapping("/departement/{departementId}/getAll")
     public ResponseEntity<List<Employee>> getAllEmployeesByDepartementId(@PathVariable(value = "departementId") Long departementId) {
         if (!departementRepository.existsById(departementId)) {
             throw new RessourceNotFoundException("Not found Departement with id = " + departementId);
@@ -30,13 +32,13 @@ public class EmployeeController {
         List<Employee> employees = employeeRepository.findByDepartementId(departementId);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
-    @GetMapping("/employee/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Employee> getEmployeesByDepartementId(@PathVariable(value = "id") Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("Not found Employee with id = " + id));
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
-    @PostMapping("/departement/{departementId}/employee")
+    @PostMapping("/departement/{departementId}/create")
     public ResponseEntity<Employee> createEmployee(@PathVariable(value = "departementId") Long departementId,
                                                  @RequestBody Employee employeeRequest)
     {
@@ -46,7 +48,7 @@ public class EmployeeController {
         }).orElseThrow(() -> new RessourceNotFoundException("Not found Departement with id = " + departementId));
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
-    @PutMapping("/employee/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable("id") long id, @RequestBody Employee employeeRequest) {
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("EmployeeId " + id + "not found"));
         employee.setNom(employeeRequest.getNom());
@@ -60,13 +62,13 @@ public class EmployeeController {
         employee.setEmail(employeeRequest.getEmail());
         return new ResponseEntity<>(employeeRepository.save(employee), HttpStatus.OK);
     }
-    @DeleteMapping("/employee/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable("id") long id) {
         employeeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/departement/{departementId}/employee")
+    @DeleteMapping("/deleteDepartement/{departementId}/deleteAll")
     public ResponseEntity<List<Employee>> deleteAllEmployeesOfDepartement(@PathVariable(value = "departementId") Long departementId) {
         if (!employeeRepository.existsById(departementId)) {
             throw new RessourceNotFoundException("Not found Tutorial with id = " + departementId);

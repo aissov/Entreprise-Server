@@ -35,7 +35,7 @@ public class DepartementController {
 
 
 
-    @GetMapping("/departement")
+    @GetMapping("/getAll")
     public ResponseEntity<List<Departement>> getAllDepartements(@RequestParam(required = false) String nom) {
         List<Departement> departement = new ArrayList<Departement>();
         if (nom == null)
@@ -47,18 +47,18 @@ public class DepartementController {
         }
         return new ResponseEntity<>(departement, HttpStatus.OK);
     }
-    @GetMapping("/departement/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Departement> getDepartementById(@PathVariable("id") long id) {
         Departement departement = departementRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Not found Tutorial with id = " + id));
              return new ResponseEntity<>(departement, HttpStatus.OK);
     }
-    @PostMapping("/departement")
+    @PostMapping("/create")
     public ResponseEntity<Departement> createDepartement(@RequestBody Departement departement) {
         Departement Dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
         Departement _departement = departementRepository.save(Dep);
         return new ResponseEntity<>(_departement, HttpStatus.CREATED);
     }
-    @PutMapping("/departement/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Departement> updateDepartement(@PathVariable("id") long id, @RequestBody Departement departement) {
         Departement _departement = departementRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Not found Tutorial with id = " + id));
         _departement.setNom(departement.getNom());
@@ -69,13 +69,13 @@ public class DepartementController {
         return new ResponseEntity<>(departementRepository.save(_departement), HttpStatus.OK);
 
     }
-    @DeleteMapping("/departement/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteDepartement(@PathVariable("id") long id) {
         departementRepository.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("/departement")
+    @DeleteMapping("/deleteAll")
     public ResponseEntity<HttpStatus> deleteAllDepartements() {
         departementRepository.deleteAll();
 
