@@ -1,8 +1,6 @@
 package com.entreprise.spring.datajpa.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "departement")
@@ -23,7 +21,11 @@ public class Departement {
     @Column(name="Budget")
     private Integer budget;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+
+
+
+
+  /*  @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
@@ -31,8 +33,14 @@ public class Departement {
     @JoinTable(name = "departement_projet",
             joinColumns = { @JoinColumn(name = "departement_id") },
             inverseJoinColumns = { @JoinColumn(name = "projet_id") })
-    private Set<Projet> projets = new HashSet<>();
 
+    @JsonBackReference
+    private Set<Projet> projets = new HashSet<>();*/
+
+    /*
+    @Column(name="SumProjetsBudget")
+    @Formula("Select sum(budget) from projet inner join departement_projet dp where dp.projet_id=p.id and dp.departement_id=departement.departement_id)")
+    private Integer sumProjetsBudget;*/
 
 
     public Departement() {
@@ -45,6 +53,8 @@ public class Departement {
         this.localisation = localisation;
         this.budget = budget;
     }
+
+
 
     public Long getId() {
         return id;
@@ -94,14 +104,24 @@ public class Departement {
         this.budget = budget;
     }
 
-    public Set<Projet> getProjet() {
+
+/*
+    public Set<Projet> getProjets() {
         return projets;
     }
 
-    public void setProjet(Set<Projet> projet) {
-        this.projets = projet;
+    public void setProjets(Set<Projet> projets) {
+        this.projets = projets;
+    }
+/*
+    public Integer getSumProjetsBudget() {
+        return sumProjetsBudget;
     }
 
+    public void setSumProjetsBudget(Integer sumProjetsBudget) {
+        sumProjetsBudget = sumProjetsBudget;
+    }*/
+/*
     public void addProjet(Projet projet) {
         this.projets.add(projet);
         projet.getDepartements().add(this);
@@ -113,5 +133,5 @@ public class Departement {
             this.projets.remove(projet);
             projet.getDepartements().remove(this);
         }
-    }
+    }*/
 }

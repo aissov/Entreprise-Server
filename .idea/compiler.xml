@@ -6,15 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="datajpa" />
+        <module name="Entreprise" />
+        <module name="SpringBootHelloWorld" />
+        <module name="spring-boot-starter-data-jpa" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="spring-boot-starter-data-jpa" target="8" />
+      <module name="datajpa" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Entreprise" options="-parameters" />
       <module name="datajpa" options="-parameters" />
     </option>
   </component>

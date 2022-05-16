@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 
+
+
+
     List<Employee>  findByDepartementId(Long postId);
    //  List<Employee> findByMatricule(Integer matricule);
   //   List<Employee> findByNomPrenom(String nom,String prenom,Integer DateNaissance);

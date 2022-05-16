@@ -18,16 +18,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/departement")
 public class DepartementController {
+
     @Autowired
     DepartementRepository departementRepository;
 
-    /*
+
     @Autowired
     public void setRepository(DepartementRepository departementRepository) {
         this.departementRepository = departementRepository;
     }
 
-
+/*
     @Override
     public void setIdentifier(Long id, Departement departement) {
         departement.setId(id);
@@ -54,10 +55,17 @@ public class DepartementController {
     }
     @PostMapping("/create")
     public ResponseEntity<Departement> createDepartement(@RequestBody Departement departement) {
-        Departement Dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
-        Departement _departement = departementRepository.save(Dep);
+        Departement dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
+        Departement _departement = departementRepository.save(dep);
         return new ResponseEntity<>(_departement, HttpStatus.CREATED);
     }
+    /*
+    @PostMapping("/createmany")
+    public ResponseEntity<Departement> createDepartement(@RequestBody List<Departement> departement) {
+        List<Departement> dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
+        List<Departement> _departement = departementRepository.save(dep);
+        return new ResponseEntity<>(_departement, HttpStatus.CREATED);
+    }*/
     @PutMapping("/update/{id}")
     public ResponseEntity<Departement> updateDepartement(@PathVariable("id") long id, @RequestBody Departement departement) {
         Departement _departement = departementRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Not found Tutorial with id = " + id));
@@ -69,6 +77,15 @@ public class DepartementController {
         return new ResponseEntity<>(departementRepository.save(_departement), HttpStatus.OK);
 
     }
+
+    @GetMapping("/BudgetDeficit")
+    public ResponseEntity<List<Departement>> BudgetDeficit(){
+
+        List<Departement> Dlist = new ArrayList<>(departementRepository.BudgetDefficit());
+
+        return new ResponseEntity<>(Dlist, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteDepartement(@PathVariable("id") long id) {
         departementRepository.deleteById(id);
@@ -77,8 +94,8 @@ public class DepartementController {
     }
     @DeleteMapping("/deleteAll")
     public ResponseEntity<HttpStatus> deleteAllDepartements() {
-        departementRepository.deleteAll();
 
+        departementRepository.deleteAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

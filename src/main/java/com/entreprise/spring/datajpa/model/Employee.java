@@ -1,19 +1,23 @@
 package com.entreprise.spring.datajpa.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "employee")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "employee_generator", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name="Nom")
@@ -23,9 +27,9 @@ public class Employee {
     @Column(name="Matricule")
     private Integer matricule;
     @Column(name="DateNaissance")
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
     @Column(name="DateEmbauche")
-    private Date dateEmbauche;
+    private LocalDate dateEmbauche;
     @Column(name="Fonction")
     private String fonction;
     @Column(name="Salaire")
@@ -36,23 +40,24 @@ public class Employee {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "departement_id", nullable = false)
    // @OnDelete(action = OnDeleteAction.CASCADE)
+
     @JsonIgnore
     private Departement departement;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
+                cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
     @JoinTable(name = "employee_projet",
             joinColumns = { @JoinColumn(name = "employee_id") },
             inverseJoinColumns = { @JoinColumn(name = "projet_id") })
+   // @JsonManagedReference
     private Set<Projet> projets = new HashSet<>();
 
 
 
-    public Employee(String nom, String prenom, Integer matricule, Date dateNaissance, Date dateEmbauche, String fonction, Integer salaire) {
-        this.id = id;
+    public Employee(String nom, String prenom, Integer matricule, LocalDate dateNaissance, LocalDate dateEmbauche, String fonction, Integer salaire,String email) {
         this.nom = nom;
         this.prenom = prenom;
         this.matricule = matricule;
@@ -60,12 +65,27 @@ public class Employee {
         this.dateEmbauche = dateEmbauche;
         this.fonction = fonction;
         this.salaire = salaire;
+        this.email = email;
+
     }
 
     public Employee() {
 
     }
 
+    //@Formula("select * from Employee ")
+
+    private Integer age ()
+    {
+        LocalDate current_date = LocalDate.now();
+        int current_Year = current_date.getYear();
+        return  current_Year-dateNaissance.getYear();
+        }
+
+    private Integer addSalaire(Integer Promotion)
+    {
+        return salaire+Promotion;
+    }
 
     public String getEmail() {
         return email;
@@ -115,19 +135,19 @@ public class Employee {
         this.matricule = matricule;
     }
 
-    public Date getDateNaissance() {
+    public LocalDate getDateNaissance() {
         return dateNaissance;
     }
 
-    public void setDateNaissance(Date dateNaissance) {
+    public void setDateNaissance(LocalDate dateNaissance) {
         this.dateNaissance = dateNaissance;
     }
 
-    public Date getDateEmbauche() {
+    public LocalDate getDateEmbauche() {
         return dateEmbauche;
     }
 
-    public void setDateEmbauche(Date dateEmbauche) {
+    public void setDateEmbauche(LocalDate dateEmbauche) {
         this.dateEmbauche = dateEmbauche;
     }
 

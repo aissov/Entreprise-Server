@@ -47,10 +47,21 @@ public class ProjetController {
                 return new ResponseEntity<>(projet, HttpStatus.OK);
                 }
 
+
+        @GetMapping("/timeOUT")
+        public ResponseEntity<List<Projet>> getAllProjets() {
+            List<Projet> projet = new ArrayList<Projet>();
+
+                projet.addAll(projetRepository.timeOUT());
+
+
+            return new ResponseEntity<>(projet, HttpStatus.OK);
+        }
+
         @PostMapping("/create")
         public ResponseEntity<Projet> createProjet(@RequestBody Projet projet) {
-            Projet Dep= new Projet(projet.getId(),projet.getIntitule(),projet.getCode(),projet.getSujet(),projet.getBudget());
-            Projet _projet = projetRepository.save(Dep);
+            Projet pro= new Projet(projet.getIntitule(),projet.getCode(),projet.getSujet(),projet.getBudget());
+            Projet _projet = projetRepository.save(pro);
                 return new ResponseEntity<>(_projet, HttpStatus.CREATED);
                 }
 

@@ -1,9 +1,10 @@
 package com.entreprise.spring.datajpa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,35 +12,33 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projet")
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Projet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   // @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
     @Column(name="Intitule")
     private String intitule;
     @Column(name="Code" , unique=true)
     private String code;
+    @Column(name="DateCreation")
+    private LocalDate dateCreaction;
+    @Column(name="TimeLimit")
+    private LocalDate timeLimit;
     @Column(name="Sujet")
     private String sujet;
     @Column(name="Budget")
     private Integer budget;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "departement_id", nullable = false)
+   // @JsonManagedReference
+    private Departement departement;
 
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade =   {
-                            CascadeType.PERSIST,
-                            CascadeType.MERGE
-                        },
-            mappedBy = "projets"
-    )
-    //@JoinColumn(name = "departement_id", nullable = false)
-
-    @JsonIgnore
-    private Set<Departement> departement=new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
@@ -48,19 +47,25 @@ public class Projet {
             mappedBy = "projets")
 
     //@JoinColumn(name = "employee_id", nullable = false)
-    @JsonIgnore
+   // @JsonBackReference
     private Set<Employee> employee=new HashSet<>();
+
+
+
+
+
+
 
     public Projet() {
     }
 
-    public Projet(Long id, String intitule, String code, String sujet, Integer budget) {
-        this.id = id;
+    public Projet(String intitule, String code, String sujet, Integer budget) {
         this.intitule = intitule;
         this.code = code;
         this.sujet = sujet;
         this.budget = budget;
     }
+
 
     public Long getId() {
         return id;
@@ -101,20 +106,24 @@ public class Projet {
     public void setBudget(Integer budget) {
         this.budget = budget;
     }
-
+/*
     public void setDepartements(Set<Departement> departement) {
         this.departement = departement;
     }
-
+*/
     public void setEmployees(Set<Employee> employee) {
         this.employee = employee;
     }
-
+/*
     public Set<Departement> getDepartements() {
         return departement;
     }
-
+*/
     public Set<Employee> getEmployees() {
         return employee;
     }
+
+
+
+
 }
