@@ -7,17 +7,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Entreprise" />
-        <module name="SpringBootHelloWorld" />
         <module name="spring-boot-starter-data-jpa" />
+        <module name="datajpa" />
+        <module name="Entreprise-Server" />
+        <module name="SpringBootHelloWorld" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="datajpa" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Entreprise" options="-parameters" />
+      <module name="Entreprise-Server" options="-parameters" />
       <module name="datajpa" options="-parameters" />
     </option>
   </component>
