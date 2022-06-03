@@ -62,8 +62,9 @@ public class DepartementController {
     /*
     @PostMapping("/createmany")
     public ResponseEntity<Departement> createDepartement(@RequestBody List<Departement> departement) {
-        List<Departement> dep= new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
-        List<Departement> _departement = departementRepository.save(dep);
+        List<Departement> dep= (List<Departement>)new Departement(departement.getNom(),departement.getDescription(),departement.getChefDepartement(),departement.getLocalisation(),departement.getBudget());
+        List<Departement> _departement;
+        _departement = departementRepository.save(dep);
         return new ResponseEntity<>(_departement, HttpStatus.CREATED);
     }*/
     @PutMapping("/update/{id}")

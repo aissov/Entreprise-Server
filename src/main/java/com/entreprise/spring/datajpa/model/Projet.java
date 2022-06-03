@@ -1,5 +1,6 @@
 package com.entreprise.spring.datajpa.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -36,37 +37,66 @@ public class Projet {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "departement_id", nullable = false)
-   // @JsonManagedReference
     private Departement departement;
 
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    },
-            mappedBy = "projets")
-
-    //@JoinColumn(name = "employee_id", nullable = false)
-   // @JsonBackReference
-
+    @ManyToMany(
+            mappedBy = "projets",
+            fetch = FetchType.LAZY,
+            cascade = {
+                        CascadeType.PERSIST,
+                        CascadeType.MERGE
+                      }
+                )
+    @JoinColumn(name = "employee_id", nullable = false)
+    @JsonBackReference
     private Set<Employee> employee=new HashSet<>();
 
 
+    public LocalDate getDateCreaction() {
+        return dateCreaction;
+    }
 
+    public void setDateCreaction(LocalDate dateCreaction) {
+        this.dateCreaction = dateCreaction;
+    }
 
+    public LocalDate getTimeLimit() {
+        return timeLimit;
+    }
 
+    public void setTimeLimit(LocalDate timeLimit) {
+        this.timeLimit = timeLimit;
+    }
 
+    public Departement getDepartement() {
+        return departement;
+    }
+
+    public void setDepartement(Departement departement) {
+        this.departement = departement;
+    }
+
+    public Set<Employee> getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Set<Employee> employee) {
+        this.employee = employee;
+    }
 
     public Projet() {
     }
 
-    public Projet(String intitule, String code, String sujet, Integer budget) {
+    public Projet(String intitule, String code, LocalDate dateCreaction, LocalDate timeLimit, String sujet, Integer budget) {
+        this.id = id;
         this.intitule = intitule;
         this.code = code;
+        this.dateCreaction = dateCreaction;
+        this.timeLimit = timeLimit;
         this.sujet = sujet;
         this.budget = budget;
     }
-
 
     public Long getId() {
         return id;
@@ -107,22 +137,19 @@ public class Projet {
     public void setBudget(Integer budget) {
         this.budget = budget;
     }
-/*
-    public void setDepartements(Set<Departement> departement) {
-        this.departement = departement;
-    }
-*/
+
+
+
     public void setEmployees(Set<Employee> employee) {
         this.employee = employee;
     }
-/*
-    public Set<Departement> getDepartements() {
-        return departement;
-    }
-*/
+
     public Set<Employee> getEmployees() {
         return employee;
     }
+
+
+
 
 
 

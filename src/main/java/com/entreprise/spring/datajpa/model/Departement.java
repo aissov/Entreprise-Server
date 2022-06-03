@@ -1,6 +1,11 @@
 package com.entreprise.spring.datajpa.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "departement")
@@ -25,7 +30,7 @@ public class Departement {
 
 
 
-  /*  @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
@@ -33,14 +38,13 @@ public class Departement {
     @JoinTable(name = "departement_projet",
             joinColumns = { @JoinColumn(name = "departement_id") },
             inverseJoinColumns = { @JoinColumn(name = "projet_id") })
-
     @JsonBackReference
-    private Set<Projet> projets = new HashSet<>();*/
+    private Set<Projet> projets = new HashSet<>();
 
-    /*
+
     @Column(name="SumProjetsBudget")
     @Formula("Select sum(budget) from projet inner join departement_projet dp where dp.projet_id=p.id and dp.departement_id=departement.departement_id)")
-    private Integer sumProjetsBudget;*/
+    private Integer sumProjetsBudget;
 
 
     public Departement() {
@@ -105,7 +109,7 @@ public class Departement {
     }
 
 
-/*
+
     public Set<Projet> getProjets() {
         return projets;
     }
@@ -113,25 +117,24 @@ public class Departement {
     public void setProjets(Set<Projet> projets) {
         this.projets = projets;
     }
-/*
+
     public Integer getSumProjetsBudget() {
         return sumProjetsBudget;
     }
 
     public void setSumProjetsBudget(Integer sumProjetsBudget) {
         sumProjetsBudget = sumProjetsBudget;
-    }*/
+    }
 /*
     public void addProjet(Projet projet) {
         this.projets.add(projet);
-        projet.getDepartements().add(this);
-    }
+        projet.getDepartement().add(this);
 
     public void removeProjet(long projetId) {
         Projet projet = this.projets.stream().filter(t -> t.getId() == projetId).findFirst().orElse(null);
         if (projet != null) {
             this.projets.remove(projet);
-            projet.getDepartements().remove(this);
+            projet.getDepartement().remove(this);
         }
     }*/
 }
